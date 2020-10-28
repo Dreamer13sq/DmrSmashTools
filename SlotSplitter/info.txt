@@ -1,0 +1,26 @@
+# This file contains meta information for master splitting
+# n  <Name> = UMM folder Name (name) 
+# nn <Name> = Single Slot Folder Name (Uses above by default)
+# s  <SlotID, Name> = cXX subtitle
+# c  <Number> = Number of costumes (8 by default)
+# cc <SlotID> = Reserve specific costume slot ("s" also does this)
+# i  <Filename> = Ignore file/path
+# a  <Filename> = Copy file to all slots (Including UMM)
+
+# Here is the example used for the Wiz Over Zelda mod:
+
+n Wiz Over Zelda by Dreamer13sq
+nn Wiz Over Zelda
+s 00 (Default)
+s 01 (Megumin)
+s 02 (Aqua)
+s 03 (Darkness)
+s 04 (Kazuma)
+s 05 (Vanir)
+s 06 (Yunyun)
+s 07 (Chris)
+i model.nusktb
+a model.numdlb
+a model.nusrcmdlb
+a alp_zelda_001_prm.nutexb
+a alp_zelda_002_col.nutexb
