@@ -1,5 +1,9 @@
 # DmrSmashTools
-Some tools used to make modelling more efficient.
+Some tools used to make modelling more efficient when using Blender.
+
+## Installation
+* In Blender, go to Edit > Preferences > Add-ons > Install... and open the DmrSmashTools.py file
+* Alternatively you can go to the Text Editor and open it from there. You would need to run the file manually from here.
 
 ## Some Operators
 * **Duplicate and Mirror**
