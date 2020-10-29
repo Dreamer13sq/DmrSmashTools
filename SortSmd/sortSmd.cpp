@@ -12,7 +12,7 @@
 
 	To use:
 	Drag an .smd file onto sortSmd.exe
-	or Open sortSmd.exe and provide a path to the .smd file to sort
+	or open sortSmd.exe and provide a path to the .smd file to sort
 
 	Compile with:
 	g++ -Wall sortSmd.cpp -o sortSmd.exe

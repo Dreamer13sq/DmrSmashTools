@@ -7,8 +7,9 @@
 	Takes files from a "master" directory and creates directories with files split into their respective costumes, 
 	all inside a "master_out" folder.
 	Creates...
-		A default folder with the minimum amount of files needed to run 
-		An "All" folder with all slots containing necessary c00 files to run single slot in ARCropolis
+		A default folder with the minimum amount of files needed to run for UltimateModManager 
+		An "All" folder with all slots containing necessary c00 files to run in ARCropolis
+		cXX single slot folders for use in ARCropolis
 
 	To use:
 	Your "master" folder should include the minimum files needed for your mod.
@@ -22,7 +23,7 @@
 		cc <SlotID> = Reserve specific costume slot ("s" also does this)
 		i  <Filename> = Ignore file/path
 			If you choose to ignore the skeleton file "model.nusktb", you can view models in StudioSB from the master folder 
-			and not to worry about deleting it later after splitting the master.
+			and not to worry about deleting the file later after splitting the master.
 		a  <Filename> = Copy file to all slots (Including UMM)
 			The model file "model.numdlb" is a good option here.
 		# = Comment. Line is ignored
