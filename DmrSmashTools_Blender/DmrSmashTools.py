@@ -1,9 +1,14 @@
+# DmrSmashTools by Dreamer
+# Github Link: https://github.com/Dreamer13sq/DmrSmashTools/tree/main/DmrSmashTools_Blender
+
 bl_info = {
     "name": "Dmr Smash Tools",
+    "description": 'Some tools used to make models more efficiently.',
     "author": "Dreamer",
     "version": (1, 0),
-    "blender": (2, 80, 0),
-    "description": 'Some tools used to make models more efficiently.\nTo have addon operators appear in a search in Blender 2.9, Enable "Developer Extras" in Edit > Preferences > Interface > Display',
+    "blender": (2, 90, 0),
+    "category": "3D View",
+    "warning": 'To have addon operators appear in a search in Blender 2.9, Enable "Developer Extras" in Edit > Preferences > Interface > Display'
 }
 
 import bpy
@@ -1154,8 +1159,10 @@ class DMR_SMASH_MATCHVERTEXINNER(bpy.types.Operator): # ------------------------
 class DMR_SMASH_MATCHNORMALS(bpy.types.Operator): # ------------------------------
     bl_label = "Match Normals"
     bl_idname = 'dmr_smash.match_normals'
-    bl_description = 'Matches normals of selected objects to those of the active object based on closeness of vertices';
-    bl_description += '\nNOTE: Vertex offsets are based off of origin';
+    bl_description = 'Matches normals of selected objects to those of the active object based on closeness of vertices' + \
+    '\nUseful for correcting normals on detetched face expression meshes.' + \
+    '\n"Auto Smooth" for selected meshes must be enabled for custom normals.' + \
+    '\nNOTE: Vertex offsets are based off of origin';
     
     matchInGroup : bpy.props.BoolProperty(name = "Only Match In Vertex Group", default = False);
     groupname : bpy.props.StringProperty(name = "", default = "normal");
@@ -1319,12 +1326,14 @@ class DMR_SMASH_CLEANMATERIALS(bpy.types.Operator): # --------------------------
 class DMR_SMASH_SMDPRIME(bpy.types.Operator): # ------------------------------
     bl_label = "Prime Data for SMD"
     bl_idname = 'dmr_smash.prime_for_smd'
-    bl_description = 'Sets up data for a cleaner smd export.';
-    bl_description += '\n - Renames object meshes to their object name with a lowercase starting letter';
-    bl_description += '\n - Renames object materials to the object name';
+    bl_description = 'Targets objects with given prefix.';
+    bl_description += '\nRenames meshes to their object name with a lowercase starting letter' + \
+    '\nRenames object materials to the object name';
     
-    targetname : bpy.props.StringProperty(name = "Model Prefix", default = "Bowsette");
-    charname : bpy.props.StringProperty(name = "VIS Name", default = "daisy");
+    targetname : bpy.props.StringProperty(name = "Model Prefix", default = "Wiz");
+    charname : bpy.props.StringProperty(name = "VIS Name", default = "zelda");
+    
+    ophelp : bpy.props.BoolProperty(name = "Help", default = False);
     
     def invoke(self, context, event):
         wm = context.window_manager;
@@ -1332,8 +1341,24 @@ class DMR_SMASH_SMDPRIME(bpy.types.Operator): # ------------------------------
     
     def draw(self, context):
         layout = self.layout;
+        
+        layout.label(text = "Prefix of object names");
         layout.prop(self, "targetname");
+        layout.label(text = "Name to replace prefix with for VIS objects");
         layout.prop(self, "charname");
+        
+        box = layout.box().column();
+        box.prop(self, "ophelp");
+        
+        if self.ophelp:
+            box.label(text = "Material names are created based on");
+            box.label(text = "the case of the first letter of an object's name.");
+            box.label(text = "Uppcase -> Mat Name = Object name");
+            box.label(text = "Lowcase -> Mat Name = Prefix swapped with VIS name");
+            box = layout.box().column();
+            box.label(text = 'Ex: with Model Prefix = "Wiz", VIS Name = "zelda"');
+            box.label(text = '"Wiz_Hair" -> "Wiz_Hair"');
+            box.label(text = '"wiz_Hot_VIS_O_OBJShape" -> "zelda_Hot_VIS_O_OBJShape"');
     
     def execute(self, context):
         namestart = str(self.targetname[0]);

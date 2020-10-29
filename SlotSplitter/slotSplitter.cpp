@@ -1,3 +1,6 @@
+#ifndef DMR_SLOTSPLITTER_CPP
+#define DMR_SLOTSPLITTER_CPP
+
 /*
 	slotSplitter.cpp by Dreamer13sq
 
@@ -11,8 +14,8 @@
 	Your "master" folder should include the minimum files needed for your mod.
 		c00 should have the shared files of all cXX folders AND the non-shared files for c00
 		cXX should have the non-shared files for each slot
-	Your "master" folder can have an "info.txt" file with options for splitting the files:
-		n  <Name> = UMM folder Name (name) 
+	Your "master" folder can have an "info.txt" file in it's root with options for splitting the files:
+		n  <Name> = UMM folder Name (name)
 		nn <Name> = Single Slot Folder Name (Uses above by default)
 		s  <SlotID, Name> = cXX subtitle
 		c  <Number> = Number of costumes (8 by default)
@@ -26,22 +29,22 @@
 	Folders are created on demand - When a file needs to be copied, it will check and create the folder right before doing so.
 	This program does NOT clear any files. It only rewrites if necessary. 
 		If files are set to be copied and then removed later, they must be manually removed from the "master_out" folder
-	
+	Once the above is setup, either drag the "master" folder to the slotSplitter.exe
+	or open slotSplitter.exe and provide a path to the master folder.
+		When completed, you should have a "master_out" folder with the files split into several directories.
+
 	Compile with:
 	g++ -Wall slotSplitter.cpp -o slotSplitter.exe
 
 	Github Link:
-	http
+	https://github.com/Dreamer13sq/DmrSmashTools/tree/main/SlotSplitter
 
-	Email:
+	Author Email:
 	dreamer13sq@gmail.com
 
 	<dirent.h> help from:
 	https://www.tutorialspoint.com/how-can-i-get-the-list-of-files-in-a-directory-using-c-or-cplusplus
 */
-
-#ifndef DMR_SLOTSPLITTER_CPP
-#define DMR_SLOTSPLITTER_CPP
 
 #include <iostream>
 #include <fstream>
@@ -156,8 +159,6 @@ public:
 		return "";
 	}
 
-	// Returns true if value is meant to be ommitted from copying
-
 	// Copies file to out directory
 	void CopyFileToOut(std::string src_path, std::string dest_path)
 	{
@@ -208,7 +209,7 @@ public:
 		return ret;
 	}
 
-	// Reads data from info file and starts the splitting process
+	// Reads data from info.txt file and starts the splitting process
 	void Split()
 	{
 		// Ensure master_path has a slash at the end

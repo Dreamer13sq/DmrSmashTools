@@ -1,3 +1,6 @@
+#ifndef DMR_SORTSMD_CPP
+#define DMR_SORTSMD_CPP
+
 /*
 	sortSmd.cpp by Dreamer13sq
 
@@ -15,14 +18,11 @@
 	g++ -Wall sortSmd.cpp -o sortSmd.exe
 
 	Github Link:
-	http
+	https://github.com/Dreamer13sq/DmrSmashTools/tree/main/SortSmd
 
-	Email:
+	Author Email:
 	dreamer13sq@gmail.com
 */
-
-#ifndef DMR_SORTSMD_CPP
-#define DMR_SORTSMD_CPP
 
 #include <iostream>
 #include <fstream>
