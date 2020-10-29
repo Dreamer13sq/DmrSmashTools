@@ -3,7 +3,7 @@
 
 bl_info = {
     "name": "Dmr Smash Tools",
-    "description": 'Some tools used to make models more efficiently.',
+    "description": 'Some tools used to make modelling more efficient.',
     "author": "Dreamer",
     "version": (1, 0),
     "blender": (2, 90, 0),
