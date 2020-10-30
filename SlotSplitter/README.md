@@ -11,7 +11,8 @@ To use:
 	* c00 should have the shared files of all cXX folders AND the non-shared files for c00
 	* cXX should have the non-shared files for each slot
 * Your "master" folder can have an "info.txt" file in it's root with options for splitting the files:
-	* n  \<Name\> = UMM folder Name (name)
+	* umm = Create UMM folder when splitting
+	* n  \<Name\> = ARCropolis/UMM folder Name
 	* nn \<Name\> = Single Slot Folder Name (Uses above by default)
 	* s  \<SlotID, Name\> = cXX subtitle
 	* c  \<Number\> = Number of costumes (8 by default)

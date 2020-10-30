@@ -16,7 +16,8 @@
 		c00 should have the shared files of all cXX folders AND the non-shared files for c00
 		cXX should have the non-shared files for each slot
 	Your "master" folder can have an "info.txt" file in it's root with options for splitting the files:
-		n  <Name> = UMM folder Name (name)
+		umm = Create UMM folder when splitting
+		n  <Name> = ARCropolis/UMM folder Name (name)
 		nn <Name> = Single Slot Folder Name (Uses above by default)
 		s  <SlotID, Name> = cXX subtitle
 		c  <Number> = Number of costumes (8 by default)
@@ -105,8 +106,11 @@ public:
 
 		out_path = "";
 		out_path_umm = "";
-		out_path_all = "";
+		out_path_arc = "";
 
+		makeUMMFolder = false;
+
+		// Omit info.txt by default
 		omitSet.insert("info.txt");
 	}
 	
@@ -127,21 +131,21 @@ public:
 		}
 
 		// Form paths
-		out_path_umm = out_path + modname + "/";
-		out_path_all = out_path + modnamesingle + " (All)/";
+		out_path_umm = out_path + modname + " (UMM)/";
+		out_path_arc = out_path + modname + " (ARCropolis)/";
 		
 		for ( auto it = slotSet.begin(); it != slotSet.end(); it++ ) // For each cXX...
 		{
 			// Has subtitle. Append to path
 			if ( subtitleMap.count(*it) > 0 )
 			{
-				out_path_arc[*it] = out_path + modnamesingle + 
+				out_path_single[*it] = out_path + modnamesingle + 
 					" c0" + std::to_string(*it) + " " + subtitleMap[*it] + "/";
 			}
 			// No Subtitle
 			else
 			{
-				out_path_arc[*it] = out_path + modnamesingle + " c0" + std::to_string(*it) + "/";
+				out_path_single[*it] = out_path + modnamesingle + " c0" + std::to_string(*it) + "/";
 			}
 		}
 	}
@@ -298,9 +302,17 @@ public:
 					allSet.insert(line);
 				}
 
+				// Enable UMM export (UMM looks to be obseleted soon)
+				else if ( line == "umm" )
+				{
+					makeUMMFolder = true;
+				}
+
 				// Eat.
 				else {std::getline(infofile, line);}
 			}
+
+			infofile.close();
 		}
 
 		if ( modname == "" ) {modname = "MySmashMod";}
@@ -314,9 +326,8 @@ public:
 		UpdatePaths();
 
 		std::cout << "Mpath: " << master_path
-			<< "\nAll: " << out_path_all
-			<< "\nUMM: " << out_path_umm
-			<< "\n";
+			<< "\nARCropolis: " << out_path_arc << "\n";
+		if (makeUMMFolder) {std::cout<< "UMM: " << out_path_umm << "\n";}
 		
 		if ( omitSet.size() > 0 )
 		{
@@ -379,30 +390,34 @@ public:
 					std::string slotname = subfilename.substr(subfilename.length() - 6, 1);
 
 					// UMM (Minimal Slots)
-					temppath = out_path_umm + currentpath;
-					CreateDirectories(temppath);
-					CopyFileToOut(dirpath + subfilename, temppath + subfilename);
+					if ( makeUMMFolder )
+					{
+						temppath = out_path_umm + currentpath;
+						CreateDirectories(temppath);
+						CopyFileToOut(dirpath + subfilename, temppath + subfilename);
+					}
 
 					if ( in00Root )
 					{
+						// Apply to UMM folder if told to do so in info.txt
 						bool applyToUMMFolder = allSet.count(subfilename) != 0;
 
 						// Copy c00 data to all cXX folders
 						for (auto it = slotSet.begin(); it != slotSet.end(); ++it)
 						{
 							// ARCropolis (Single Slot)
-							temppath = out_path_arc[*it] + currentpath;
+							temppath = out_path_single[*it] + currentpath;
 							temppath = StringReplace(temppath, "c00", "c0" + std::to_string(*it));
 							CreateDirectories(temppath);
 							CopyFileToOut(dirpath + subfilename, temppath + subfilename);
 
 							// All (All Slots)
 							temppath = StringReplace(currentpath, "c00", "c0" + std::to_string(*it));
-							temppath = out_path_all + temppath;
+							temppath = out_path_arc + temppath;
 							CreateDirectories(temppath);
 							CopyFileToOut(dirpath + subfilename, temppath + subfilename);
 
-							if ( applyToUMMFolder )
+							if ( applyToUMMFolder && makeUMMFolder )
 							{
 								// UMM (All Slots)
 								temppath = StringReplace(currentpath, "c00", "c0" + std::to_string(*it));
@@ -425,7 +440,7 @@ public:
 							if ( (isChara7File && isc00File) )
 							{
 								// ARCropolis (Single Slot)
-								temppath = out_path_arc[std::stoi(slotname)] + currentpath;
+								temppath = out_path_single[std::stoi(slotname)] + currentpath;
 								CreateDirectories(temppath);
 								CopyFileToOut(dirpath + subfilename, temppath + subfilename);
 							}
@@ -436,7 +451,7 @@ public:
 								for (auto it = slotSet.begin(); it != slotSet.end(); ++it)
 								{
 									// ARCropolis (Single Slot)
-									temppath = out_path_arc[std::stoi(slotname)] + currentpath;
+									temppath = out_path_single[std::stoi(slotname)] + currentpath;
 									CreateDirectories(temppath);
 									CopyFileToOut(dirpath + subfilename, temppath + subfilename);
 								}
@@ -444,7 +459,7 @@ public:
 						}
 
 						// All (All Slots)
-						temppath = out_path_all + currentpath;
+						temppath = out_path_arc + currentpath;
 						CreateDirectories(temppath);
 						CopyFileToOut(dirpath + subfilename, temppath + subfilename);
 					}
@@ -462,8 +477,8 @@ public:
 
 private:
 	std::string master_path, modname, modnamesingle;
-	std::string out_path, out_path_umm, out_path_all;
-	std::map<int, std::string> out_path_arc; // Holds subtitles to apply to folders
+	std::string out_path, out_path_umm, out_path_arc;
+	std::map<int, std::string> out_path_single; // Holds subtitles to apply to folders
 
 	std::set<int> slotSet; // Holds indices for slots to copy over to
 	std::set<std::string> omitSet; // Holds filenames/paths to omit from copying
@@ -471,6 +486,8 @@ private:
 	std::map<int, std::string> subtitleMap; // Holds subtitles to apply to folders
 
 	std::set<std::string> usedpaths;
+
+	bool makeUMMFolder;
 };
 
 int main(int argc, char* argv[])
