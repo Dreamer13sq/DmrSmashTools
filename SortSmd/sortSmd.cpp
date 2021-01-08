@@ -10,6 +10,11 @@
 		- "mouth" (Ex: "zelda_PatternA_Mouth_VIS_O_OBJShape")
 		- "blink" (Ex: "zelda_Ouch_Blink_VIS_O_OBJShape")
 
+	Merges meshes with "_x_" suffix. Name becomes whatever is before the underscores
+		Ex: "Crono_Sword_x_Blade" and "Crono_Sword_x_Hilt" will be merged into one "Crono_Sword"
+
+	Flips y-coordinate of all UVs
+
 	To use:
 	Drag an .smd file onto sortSmd.exe
 	or open sortSmd.exe and provide a path to the .smd file to sort
@@ -106,6 +111,7 @@ public:
 		ty_tridata* current_tridata; // Used to insert tridata in loop
 
 		std::string line, line2;
+		float uvY = 0.0;
 
 		std::getline(file, line, '\n'); // "version 1"
 		preTridata.push_back(line + '\n');
@@ -145,6 +151,13 @@ public:
 			std::getline(file, line, '\n');
 			if ( line.find("end") != std::string::npos ) {break;}
 
+			// Check "_x_" suffix
+			if ( line.find("_x_") != std::string::npos )
+			{
+				// Take string before "_x_"
+				line = line.substr(0, line.find("_x_"));
+			}
+
 			// line is object name
 			if ( tridataMap.count(line) == 0 )
 			{
@@ -162,9 +175,28 @@ public:
 			current_tridata = tridataMap[line];
 
 			// Read vertex data
+			// <int|Parent bone> <float|PosX PosY PosZ> <normal|NormX NormY NormZ> <normal|U V> <int|links> <int|Bone ID> <float|Weight> [...]
 			line2 = "";
 			for ( int i = 0; i < 3; i++ )
 			{
+				// Parent bone
+				file >> line; line2 += line + " ";
+
+				// Vertex Position
+				file >> line; line2 += line + " ";
+				file >> line; line2 += line + " ";
+				file >> line; line2 += line + " ";
+
+				// Normal
+				file >> line; line2 += line + " ";
+				file >> line; line2 += line + " ";
+				file >> line; line2 += line + " ";
+
+				// UV
+				file >> line; line2 += line + " ";
+				file >> uvY; line2 += std::to_string(-uvY) + " "; // Flip UV y coordinate
+
+				// Rest of line
 				std::getline(file, line, '\n');
 				line2 += line + "\n";
 			}
